@@ -1,25 +1,85 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Button Link Example</title>
-<style>
-  .my-button {
-    background-color: #4CAF50; 
-    border: none;
-    color: white;
-    padding: 15px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    cursor: pointer;
-  }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redirecting...</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: linear-gradient(135deg, #0f172a, #1e293b);
+      font-family: "Inter", sans-serif;
+      color: #ffffff;
+      text-align: center;
+      opacity: 0;
+      animation: fadeIn 1s forwards;
+    }
+    @keyframes fadeIn {
+      to { opacity: 1; }
+    }
+    .container {
+      max-width: 400px;
+      padding: 20px;
+      border-radius: 16px;
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(8px);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+      transition: transform 0.3s ease;
+    }
+    h1 {
+      font-size: 26px;
+      margin-bottom: 12px;
+      font-weight: 700;
+    }
+    p {
+      font-size: 16px;
+      margin-bottom: 25px;
+      color: #cbd5e1;
+    }
+    .my-button {
+      background: linear-gradient(90deg, #22c55e, #16a34a);
+      border: none;
+      color: white;
+      padding: 14px 40px;
+      font-size: 18px;
+      font-weight: 600;
+      border-radius: 50px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.3);
+    }
+    .my-button:hover {
+      transform: translateY(-4px) scale(1.05);
+      box-shadow: 0 12px 25px rgba(0,0,0,0.4);
+    }
+    .fade-text {
+      animation: fadeText 1.5s infinite alternate;
+    }
+    @keyframes fadeText {
+      from { opacity: 0.6; }
+      to { opacity: 1; }
+    }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1 class="fade-text">Redirecting you...</h1>
+    <p>You will be automatically redirected to the projects page shortly.</p>
+    <button class="my-button" onclick="window.location.href='projects.html';">
+      Go to Projects
+    </button>
+  </div>
 
-<button class="my-button" onclick="window.location.href='projects.html';">Go to Example.com</button>
-
+  <script>
+   
+    setTimeout(() => {
+      window.location.href = "projects.html";
+    }, 3000);
+  </script>
 </body>
 </html>
