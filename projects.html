@@ -5,29 +5,62 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.ico" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <style>
       body {
-        background-color: #121212;
+        background-color: #0f0f0f;
         color: #ffffff;
         font-family: "Inter", sans-serif;
         margin: 0;
         padding: 0;
-        text-align: center;
       }
-      h1 {
-        font-size: 3em;
-        margin: 1rem 0;
+      header {
+        background: #1c1c1c;
+        padding: 15px 30px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+      }
+      header h1 {
+        font-size: 1.5em;
+        margin: 0;
+        color: #fff;
+      }
+      nav {
+        display: flex;
+        gap: 20px;
+      }
+      nav a {
+        color: #fff;
+        text-decoration: none;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: color 0.3s ease;
+      }
+      nav a:hover {
+        color: #22c55e;
+      }
+      .page-title {
+        text-align: center;
+        font-size: 2.5em;
+        margin: 1.5rem 0;
       }
       #search {
         width: 100%;
         font-size: 18px;
-        padding: 10px 20px;
+        padding: 12px 20px;
         border-radius: 12px;
         border: none;
         margin: auto;
         max-width: 600px;
-        margin-bottom: 20px;
+        margin-bottom: 30px;
         outline: none;
+        display: block;
       }
       #loader {
         display: block;
@@ -46,42 +79,42 @@
       }
       .flex-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        gap: 20px;
+        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+        gap: 25px;
         justify-items: center;
         padding: 20px;
       }
       .game-link {
         text-decoration: none;
         color: inherit;
-        width: 220px;
+        width: 250px;
       }
       .game-tile {
-        background-color: #1e1e1e;
+        background: #1f1f1f;
         border-radius: 16px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.5);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
         overflow: hidden;
         display: flex;
         flex-direction: column;
       }
       .game-tile:hover {
-        transform: translateY(-6px);
-        box-shadow: 0 8px 20px rgba(0,0,0,0.6);
+        transform: translateY(-8px);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.7);
       }
       .game-icon {
         width: 100%;
-        height: 180px;
+        height: 200px;
         object-fit: cover;
       }
       .game-title {
         font-size: 18px;
         font-weight: 600;
-        padding: 12px;
+        padding: 14px;
         text-align: center;
         color: #fff;
       }
-      button {
+      .home-btn {
         cursor: pointer;
         background-color: #b625cc;
         border: none;
@@ -108,13 +141,22 @@
     </style>
   </head>
   <body>
-    <h1>Games</h1>
+    <header>
+      <h1>GameHub</h1>
+      <nav>
+        <a href="/index.html"><i class="fas fa-home"></i> Home</a>
+        <a href="/games.html"><i class="fas fa-gamepad"></i> Games</a>
+        <a href="/contact.html"><i class="fas fa-envelope"></i> Contact</a>
+      </nav>
+    </header>
+
+    <div class="page-title">Games</div>
     <input type="text" id="search" onkeyup="searchGames()" placeholder="Search for games..." />
     <div id="loader"></div>
     <div id="game-container" class="flex-container"></div>
     <p>
       <a href="/index.html">
-        <button>Go to the homepage</button>
+        <button class="home-btn">Go to the homepage</button>
       </a>
     </p>
     <button id="back-to-top">Back to top</button>
