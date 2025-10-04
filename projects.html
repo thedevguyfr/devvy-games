@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en-US">
   <head>
-    <title>Games</title>
+    <title>Devvy - Games</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link rel="icon" href="/favicon.ico" />
@@ -15,23 +15,26 @@
         padding: 0;
       }
       header {
-        background: #1c1c1c;
-        padding: 15px 30px;
+        background: rgba(28, 28, 28, 0.85);
+        backdrop-filter: blur(10px);
+        padding: 15px 40px;
         display: flex;
         justify-content: space-between;
         align-items: center;
         position: sticky;
         top: 0;
         z-index: 1000;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
       }
       header h1 {
-        font-size: 1.5em;
+        font-size: 1.6em;
         margin: 0;
-        color: #fff;
+        color: #22c55e;
+        font-weight: 700;
       }
       nav {
         display: flex;
-        gap: 20px;
+        gap: 25px;
       }
       nav a {
         color: #fff;
@@ -40,32 +43,51 @@
         display: flex;
         align-items: center;
         gap: 8px;
-        transition: color 0.3s ease;
+        padding: 6px 12px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
       }
       nav a:hover {
-        color: #22c55e;
+        background: #22c55e;
+        color: #000;
       }
       .page-title {
         text-align: center;
-        font-size: 2.5em;
+        font-size: 2.8em;
         margin: 1.5rem 0;
+        font-weight: 700;
       }
-      #search {
+      .search-container {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+      }
+      .search-box {
+        position: relative;
+        width: 100%;
+        max-width: 600px;
+      }
+      .search-box input {
         width: 100%;
         font-size: 18px;
-        padding: 12px 20px;
-        border-radius: 12px;
+        padding: 12px 45px 12px 20px;
+        border-radius: 50px;
         border: none;
-        margin: auto;
-        max-width: 600px;
-        margin-bottom: 30px;
         outline: none;
-        display: block;
+        background: #1f1f1f;
+        color: #fff;
+      }
+      .search-box i {
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #aaa;
       }
       #loader {
         display: block;
         border: 8px solid #f3f3f3;
-        border-top: 8px solid #3498db;
+        border-top: 8px solid #22c55e;
         border-radius: 50%;
         width: 80px;
         height: 80px;
@@ -79,39 +101,45 @@
       }
       .flex-container {
         display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 25px;
+        grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+        gap: 30px;
         justify-items: center;
         padding: 20px;
       }
       .game-link {
         text-decoration: none;
         color: inherit;
-        width: 250px;
+        width: 260px;
       }
       .game-tile {
+        position: relative;
         background: #1f1f1f;
-        border-radius: 16px;
-        box-shadow: 0 6px 14px rgba(0,0,0,0.5);
-        transition: transform 0.2s ease, box-shadow 0.2s ease;
+        border-radius: 20px;
+        box-shadow: 0 6px 14px rgba(0,0,0,0.6);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
         overflow: hidden;
-        display: flex;
-        flex-direction: column;
       }
       .game-tile:hover {
-        transform: translateY(-8px);
-        box-shadow: 0 10px 25px rgba(0,0,0,0.7);
+        transform: translateY(-10px) scale(1.03);
+        box-shadow: 0 12px 30px rgba(0,0,0,0.8);
       }
       .game-icon {
         width: 100%;
         height: 200px;
         object-fit: cover;
+        display: block;
+      }
+      .game-overlay {
+        position: absolute;
+        bottom: 0;
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
+        text-align: center;
       }
       .game-title {
         font-size: 18px;
         font-weight: 600;
-        padding: 14px;
-        text-align: center;
         color: #fff;
       }
       .home-btn {
@@ -133,16 +161,21 @@
         background: #22c55e;
         color: #fff;
         padding: 12px 20px;
-        border-radius: 8px;
+        border-radius: 50px;
         border: none;
         cursor: pointer;
         font-size: 14px;
+        box-shadow: 0 6px 12px rgba(0,0,0,0.5);
+        transition: background 0.3s;
+      }
+      #back-to-top:hover {
+        background: #16a34a;
       }
     </style>
   </head>
   <body>
     <header>
-      <h1>GameHub</h1>
+      <h1>Devvy</h1>
       <nav>
         <a href="/index.html"><i class="fas fa-home"></i> Home</a>
         <a href="/games.html"><i class="fas fa-gamepad"></i> Games</a>
@@ -151,15 +184,23 @@
     </header>
 
     <div class="page-title">Games</div>
-    <input type="text" id="search" onkeyup="searchGames()" placeholder="Search for games..." />
+    <div class="search-container">
+      <div class="search-box">
+        <input type="text" id="search" onkeyup="searchGames()" placeholder="Search for games..." />
+        <i class="fas fa-search"></i>
+      </div>
+    </div>
     <div id="loader"></div>
     <div id="game-container" class="flex-container"></div>
+
     <p>
       <a href="/index.html">
         <button class="home-btn">Go to the homepage</button>
       </a>
     </p>
+
     <button id="back-to-top">Back to top</button>
+
     <script>
       let games = []
       fetch("config/games.json")
@@ -174,7 +215,9 @@
             game.innerHTML = `
               <div class="game-tile">
                 <img class="game-icon" src="${project.imgSrc}" alt="icon" loading="lazy"/>
-                <p class="game-title">${project.title}</p>
+                <div class="game-overlay">
+                  <p class="game-title">${project.title}</p>
+                </div>
               </div>`
             container.appendChild(game)
           })
@@ -196,7 +239,9 @@
             game.innerHTML = `
               <div class="game-tile">
                 <img class="game-icon" src="${project.imgSrc}" alt="icon" loading="lazy"/>
-                <p class="game-title">${project.title}</p>
+                <div class="game-overlay">
+                  <p class="game-title">${project.title}</p>
+                </div>
               </div>`
             container.appendChild(game)
           })
