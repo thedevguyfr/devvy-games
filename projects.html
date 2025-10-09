@@ -106,6 +106,40 @@
         background-clip: text;
         letter-spacing: -0.02em;
       }
+      .category-filter {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 12px;
+        flex-wrap: wrap;
+        padding: 0 40px 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+      }
+      .category-btn {
+        background: rgba(30, 30, 40, 0.6);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: rgba(255,255,255,0.7);
+        padding: 10px 24px;
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        font-family: inherit;
+      }
+      .category-btn:hover {
+        background: rgba(34, 197, 94, 0.15);
+        border-color: rgba(34, 197, 94, 0.3);
+        color: #22c55e;
+        transform: translateY(-2px);
+      }
+      .category-btn.active {
+        background: linear-gradient(135deg, #22c55e 0%, #10b981 100%);
+        border-color: #22c55e;
+        color: #fff;
+        box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
+      }
       #loader {
         display: block;
         border: 6px solid rgba(255,255,255,0.1);
@@ -217,6 +251,14 @@
           font-size: 2.5em;
           margin: 2rem 0 1.5rem;
         }
+        .category-filter {
+          padding: 0 20px 20px;
+          gap: 8px;
+        }
+        .category-btn {
+          padding: 8px 16px;
+          font-size: 13px;
+        }
         .flex-container {
           grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
           gap: 16px;
@@ -247,6 +289,7 @@
     </header>
 
     <div class="page-title">Games</div>
+    <div class="category-filter" id="category-filter"></div>
     <div id="loader"></div>
     <div id="game-container" class="flex-container"></div>
 
@@ -260,48 +303,86 @@
 
     <script>
       let games = []
+      let currentCategory = 'all'
+      
       fetch("config/games.json")
         .then((response) => response.json())
         .then((data) => {
           games = data
-          const container = document.getElementById("game-container")
-          data.forEach((project) => {
-            const game = document.createElement("a")
-            game.href = project.link
-            game.className = "game-link"
-            game.innerHTML = `
-              <div class="game-tile">
-                <img class="game-icon" src="${project.imgSrc}" alt="icon" loading="lazy"/>
-                <div class="game-overlay">
-                  <p class="game-title">${project.title}</p>
-                </div>
-              </div>`
-            container.appendChild(game)
+          
+          const categories = ['all', ...new Set(data.map(game => game.category).filter(Boolean))]
+          const categoryFilter = document.getElementById("category-filter")
+          
+          categories.forEach(category => {
+            const btn = document.createElement("button")
+            btn.className = `category-btn ${category === 'all' ? 'active' : ''}`
+            btn.textContent = category === 'all' ? 'All Games' : category.charAt(0).toUpperCase() + category.slice(1)
+            btn.onclick = () => filterByCategory(category)
+            categoryFilter.appendChild(btn)
           })
+          
+          displayGames(data)
           document.getElementById("loader").style.display = "none"
         })
         .catch((error) => console.error("Error:", error))
 
+      function displayGames(gamesToDisplay) {
+        const container = document.getElementById("game-container")
+        container.innerHTML = ""
+        gamesToDisplay.forEach((project) => {
+          const game = document.createElement("a")
+          game.href = project.link
+          game.className = "game-link"
+          game.innerHTML = `
+            <div class="game-tile">
+              <img class="game-icon" src="${project.imgSrc}" alt="icon" loading="lazy"/>
+              <div class="game-overlay">
+                <p class="game-title">${project.title}</p>
+              </div>
+            </div>`
+          container.appendChild(game)
+        })
+      }
+
+      function filterByCategory(category) {
+        currentCategory = category
+        
+        document.querySelectorAll('.category-btn').forEach(btn => {
+          btn.classList.remove('active')
+        })
+        event.target.classList.add('active')
+        
+        const input = document.getElementById("search")
+        const searchFilter = input.value.toUpperCase()
+        
+        let filteredGames = games
+        
+        if (category !== 'all') {
+          filteredGames = games.filter(game => game.category === category)
+        }
+        
+        if (searchFilter) {
+          filteredGames = filteredGames.filter(game => game.title.toUpperCase().includes(searchFilter))
+        }
+        
+        displayGames(filteredGames)
+      }
+
       function searchGames() {
         const input = document.getElementById("search")
         const filter = input.value.toUpperCase()
-        const container = document.getElementById("game-container")
-        container.innerHTML = ""
-        games
-          .filter((game) => game.title.toUpperCase().includes(filter))
-          .forEach((project) => {
-            const game = document.createElement("a")
-            game.href = project.link
-            game.className = "game-link"
-            game.innerHTML = `
-              <div class="game-tile">
-                <img class="game-icon" src="${project.imgSrc}" alt="icon" loading="lazy"/>
-                <div class="game-overlay">
-                  <p class="game-title">${project.title}</p>
-                </div>
-              </div>`
-            container.appendChild(game)
-          })
+        
+        let filteredGames = games
+        
+        if (currentCategory !== 'all') {
+          filteredGames = games.filter(game => game.category === currentCategory)
+        }
+        
+        if (filter) {
+          filteredGames = filteredGames.filter(game => game.title.toUpperCase().includes(filter))
+        }
+        
+        displayGames(filteredGames)
       }
 
       const backToTopButton = document.getElementById('back-to-top')
