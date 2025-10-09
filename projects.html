@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en-US">
-  <head>
+  <head> 
     <title>Devvy - Games</title>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -281,8 +281,8 @@
         </div>
         <nav>
           <a href="/index.html"><i class="fas fa-home"></i> Home</a>
-          <a href="/projects.html"><i class="fas fa-gamepad"></i> Games</a>
-          <a href="/wip.html"><i class="fas fa-comments"></i> Chat</a>
+          <a href="/games.html"><i class="fas fa-gamepad"></i> Games</a>
+          <a href="/chat.html"><i class="fas fa-comments"></i> Chat</a>
           <a href="/contact.html"><i class="fas fa-envelope"></i> Contact</a>
         </nav>
       </div>
@@ -292,12 +292,6 @@
     <div class="category-filter" id="category-filter"></div>
     <div id="loader"></div>
     <div id="game-container" class="flex-container"></div>
-
-    <p>
-      <a href="/index.html">
-        <button class="home-btn">Go to the homepage</button>
-      </a>
-    </p>
 
     <button id="back-to-top">Back to top</button>
 
@@ -310,14 +304,26 @@
         .then((data) => {
           games = data
           
-          const categories = ['all', ...new Set(data.map(game => game.category).filter(Boolean))]
+          const categories = [
+            { id: 'all', label: 'All Games' },
+            { id: 'action', label: 'Action' },
+            { id: 'puzzle', label: 'Puzzle' },
+            { id: 'shooting', label: 'Shooting' },
+            { id: 'cars', label: 'Cars' },
+            { id: 'multiplayer', label: 'Multiplayer' },
+            { id: 'adventure', label: 'Adventure' },
+            { id: 'sports', label: 'Sports' },
+            { id: 'strategy', label: 'Strategy' },
+            { id: 'arcade', label: 'Arcade' }
+          ]
+          
           const categoryFilter = document.getElementById("category-filter")
           
           categories.forEach(category => {
             const btn = document.createElement("button")
-            btn.className = `category-btn ${category === 'all' ? 'active' : ''}`
-            btn.textContent = category === 'all' ? 'All Games' : category.charAt(0).toUpperCase() + category.slice(1)
-            btn.onclick = () => filterByCategory(category)
+            btn.className = `category-btn ${category.id === 'all' ? 'active' : ''}`
+            btn.textContent = category.label
+            btn.onclick = () => filterByCategory(category.id, btn)
             categoryFilter.appendChild(btn)
           })
           
@@ -344,13 +350,13 @@
         })
       }
 
-      function filterByCategory(category) {
+      function filterByCategory(category, clickedBtn) {
         currentCategory = category
         
         document.querySelectorAll('.category-btn').forEach(btn => {
           btn.classList.remove('active')
         })
-        event.target.classList.add('active')
+        clickedBtn.classList.add('active')
         
         const input = document.getElementById("search")
         const searchFilter = input.value.toUpperCase()
@@ -358,7 +364,7 @@
         let filteredGames = games
         
         if (category !== 'all') {
-          filteredGames = games.filter(game => game.category === category)
+          filteredGames = games.filter(game => game.category && game.category.toLowerCase() === category)
         }
         
         if (searchFilter) {
@@ -375,7 +381,7 @@
         let filteredGames = games
         
         if (currentCategory !== 'all') {
-          filteredGames = games.filter(game => game.category === currentCategory)
+          filteredGames = games.filter(game => game.category && game.category.toLowerCase() === currentCategory)
         }
         
         if (filter) {
